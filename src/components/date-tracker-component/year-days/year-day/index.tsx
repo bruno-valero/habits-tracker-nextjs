@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 
-// import { ptBR } from 'date-fns/locale'
 import { findDayDetails } from '@/api/find-day-details'
 import { DaySquare, DaySquareProps } from '@/components/day-square'
 import { QueryKeys } from '@/components/providers/query-client'

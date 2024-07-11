@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { eachDayOfInterval } from 'date-fns'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import {
@@ -15,26 +16,41 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 import { YearDay } from './year-day'
 
+dayjs.extend(utc)
+
 export function YearDays() {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const dateRange = useMemo(() => {
-    const startOfYear = dayjs().startOf('year')
-    const firstDay = startOfYear.subtract(startOfYear.day(), 'day').toDate()
-    const today = dayjs().startOf('day').toDate()
+    const dateToUTC = (date: Date) =>
+      new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes(),
+        date.getUTCSeconds(),
+      )
+
+    const startOfYear = dayjs.utc().startOf('year')
+    const firstDay = dateToUTC(
+      startOfYear.subtract(startOfYear.day(), 'day').toDate(),
+    )
+    const today = dateToUTC(dayjs.utc().startOf('day').toDate())
 
     const minDayDifference = 18 * 7 // 18 semanas
-    const dayDifference = dayjs(today).diff(firstDay, 'day')
+    const dayDifference = dayjs.utc(today).diff(firstDay, 'day')
 
-    const todayMinusMinDiff = dayjs(today).subtract(minDayDifference, 'day')
-    const minDateFirstDay = todayMinusMinDiff
-      .subtract(todayMinusMinDiff.day(), 'day')
-      .toDate()
+    const todayMinusMinDiff = dayjs.utc(today).subtract(minDayDifference, 'day')
+    const minDateFirstDay = dateToUTC(
+      todayMinusMinDiff.subtract(todayMinusMinDiff.day(), 'day').toDate(),
+    )
 
     const isMoreThanMinDayDifference = dayDifference > minDayDifference
 
     const startDay = isMoreThanMinDayDifference ? firstDay : minDateFirstDay
 
+    console.log('dateRange', 'startDay', startDay, 'today', today)
     return {
       from: startDay,
       to: today,
@@ -59,7 +75,8 @@ export function YearDays() {
       start: dateRange.from,
       end: dateRange.to,
     }).map((item) => {
-      const getStartOfDay = (date: Date) => dayjs(date).startOf('day').toDate()
+      const getStartOfDay = (date: Date) =>
+        dayjs.utc(date).startOf('day').toDate()
 
       const dayStart = getStartOfDay(item)
 
