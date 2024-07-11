@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import ptBR from 'dayjs/locale/pt-br'
+import utc from 'dayjs/plugin/utc'
 import { Check, X } from 'lucide-react'
 import { useCallback } from 'react'
 
@@ -23,6 +24,8 @@ interface YearDayPopoverProps {
   date?: Date
   state?: DaySquareProps['state']
 }
+
+dayjs.extend(utc)
 
 export function YearDayPopover({ data, state, date }: YearDayPopoverProps) {
   // eslint-disable-next-line
@@ -142,10 +145,13 @@ export function YearDayPopover({ data, state, date }: YearDayPopoverProps) {
       <div className="w-full">
         <div className="flex w-full flex-col items-center justify-center gap-0">
           <span className="text-sm font-semibold text-muted-foreground">
-            {dayjs(data.day.date).locale(ptBR).format('dddd')}
+            {dayjs.utc(data.day.date).locale(ptBR).format('dddd')}
           </span>
           <p className="text-center text-lg font-semibold">
-            {dayjs(data.day.date).locale(ptBR).format('DD [de] MMMM [de] YYYY')}
+            {dayjs
+              .utc(data.day.date)
+              .locale(ptBR)
+              .format('DD [de] MMMM [de] YYYY')}
           </p>
         </div>
         <Separator className="my-1" />
