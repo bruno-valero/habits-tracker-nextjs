@@ -4,6 +4,7 @@ import ptBR from 'dayjs/locale/pt-br'
 import utc from 'dayjs/plugin/utc'
 import { Check, X } from 'lucide-react'
 import { useCallback } from 'react'
+import { toast } from 'sonner'
 
 import { FetchDaysWithCompletedNumberResponse } from '@/api/fetch-days-with-completed-number'
 import { FindDayDetailsResponse } from '@/api/find-day-details'
@@ -134,7 +135,7 @@ export function YearDayPopover({ data, state, date }: YearDayPopoverProps) {
       try {
         await toggleDayHabitMutation({ date, habitId })
       } catch (error) {
-        console.log(error)
+        toast.error('Não foi possível realizar esta ação. Tente novamente')
       }
     },
     [],
