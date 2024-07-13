@@ -117,7 +117,7 @@ export function DialogLogin() {
   )
 
   return (
-    <DialogContent>
+    <DialogContent className="max-[550px]:w-full max-[550px]:max-w-[90%]">
       <form
         className="flex w-full flex-col gap-8"
         onSubmit={handleSubmit(isRegistered ? handleLogin : handleRegister)}
